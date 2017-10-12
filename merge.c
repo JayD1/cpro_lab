@@ -1,31 +1,45 @@
 #include<stdio.h>
 
-int a3[100];
-
-void merge(int a1[100], int sz1, int a2[100], int sz2)
+void merge(int a1[102], int sz1, int a2[102], int sz2, int a3[102])
 {
 	int i=0,j=0,k=0;
-	while((i<sz1)||(j<sz2))
+	while((i<sz1)&&(j<sz2))
 	{
-		if(a1[i]<=a2[j])
-			a3[k++]=a1[i++];
-		else
-			a3[k++]=a2[j++];
+		if(a1[i]<a2[j])
+			a3[i+j]=a1[i++];
+		if(a1[i]>=a2[j])
+			a3[i+j]=a2[j++];
+		while(i<sz1)
+			a3[i+j]=a1[i++];
+		while(j<sz2)
+			a3[i+j]=a2[j++];
 	}
-	for(i=0;i<k;i++)
-		printf("%d ",a3[i]);
-	printf("\n");
+}
+
+void mergesort(int arr[100], int sz)
+{
+	if(sz<=1)
+		return;
+	int p1[102],p2[102],i;
+	for(i=0;i<sz/2;i++)
+		p1[i]=arr[i];
+	for(i=sz/2;i<sz;i++)
+		p2[i-sz/2]=arr[i];
+	mergesort(p1, sz/2);
+	mergesort(p2, sz-sz/2);
+	merge(p1, sz/2, p2, sz-sz/2, arr);
 }
 
 int main()
 {
-	int i,sz1,sz2;
-	scanf("%d %d",&sz1,&sz2);
-	int a1[sz1],a2[sz2];
-	for(i=0;i<sz1;i++)
-		scanf("%d",&a1[i]);
-	for(i=0;i<sz2;i++)
-		scanf("%d",&a2[i]);
-	merge(a1, sz1, a2, sz2);
+	int i,sz;
+	scanf("%d",&sz);
+	int arr[102];
+	for(i=0;i<sz;i++)
+		scanf("%d",&arr[i]);
+	mergesort(arr, sz);
+	for(i=0;i<sz;i++)
+		printf("%d ",arr[i]);
+	printf("\n");
 	return 0;
 }
